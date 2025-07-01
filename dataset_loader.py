@@ -1,6 +1,18 @@
 import pandas as pd
 import numpy as np
 
+def credit_score_level(score):
+    if score >= 800:
+        return 4
+    elif score >= 740:
+        return 3
+    elif score >= 670:
+        return 2
+    elif score >= 580:
+        return 1
+    else:
+        return 0
+
 def dataset_loader(data):
 
     if 'ID' in data.columns:
@@ -19,6 +31,10 @@ def dataset_loader(data):
     data['Citizenship_Status'] = data['Citizenship_Status'].replace({'Visa Holder': 0, 'Permanent Resident': 1, 'Citizen': 2}).astype(int)
     data['Age_Group'] = data['Age_Group'].replace({'Over 60': 0, '25-60': 1, 'Under 25': 2}).astype(int)
     data['Language_Proficiency'] = data['Language_Proficiency'].replace({'Limited': 0, 'Fluent': 1}).astype(int)
+
+    # For further training
+    data['Meets_LTI_Criteria'] = (data['Loan_Amount'] / data['Income'] < 3).astype(int)
+    data['Credit_Level'] = data['Credit_Score'].apply(credit_score_level)
 
     # accept only numeric data
     return data.select_dtypes(include=[np.number])

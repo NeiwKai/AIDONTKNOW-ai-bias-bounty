@@ -9,12 +9,10 @@ def main():
 
     data = dataset_loader(data)
 
-    '''
     print(data.columns)
     print(data.head())
-    '''
 
-    bias_detection(data) # use to detect the bias in dataset, comment this if not want
+    bias_detection(data) # use to detect the bias in dataset
 
 
 if __name__ == "__main__":
