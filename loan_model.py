@@ -24,7 +24,8 @@ def main():
 
     bias_detection(data)
     
-    
+    categorical_cols = data.drop(columns=['Loan_Approved']).select_dtypes(include=['object', 'category']).columns.tolist()
+
     preprocessor = ColumnTransformer(transformers=[('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols)],remainder='passthrough')
     
     pipeline = Pipeline(steps=[
