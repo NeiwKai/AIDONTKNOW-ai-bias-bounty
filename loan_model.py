@@ -14,7 +14,8 @@ def main():
     print(data.head())
     '''
 
-    bias_detection(data)
+    bias_detection(data) # use to detect the bias in dataset, comment this if not want
+
 
 if __name__ == "__main__":
     main()

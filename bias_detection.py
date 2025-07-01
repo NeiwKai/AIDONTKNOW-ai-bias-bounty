@@ -14,6 +14,8 @@ def bias_detection(data):
     data['Race_Asian_priv'] = (data['Race'] == 5).astype(int)
     data['Race_Native-American_priv'] = (data['Race'] == 4).astype(int)
     data['EmploymentType_Unemployed_priv'] = (data['Gender'] == 0).astype(int)
+    data['CreditScore_HighCredit_priv'] = (data['Credit_Score'] >= 670).astype(int)
+    data['Income_HighIncome_priv'] = (data['Income'] >= 45000).astype(int)
 
     # Bias against Black
     privileged_groups_black = [{'Race_Black_priv': 0}]
@@ -105,37 +107,110 @@ def bias_detection(data):
     print("Statistical Parity Difference:", metric_unemployed.statistical_parity_difference())
     print()
 
-    # Bias against Black Criminal_Record
-    privileged_groups_BlCr = [{'Race_Black_priv': 0, 'Criminal_Record': 1}]
-    unprivileged_groups_BlCr = [{'Race_Black_priv': 1, 'Criminal_Record': 1}]
-    alf_dataset_BlCr = BinaryLabelDataset(
+    # Bias against Non-White Criminal_Record
+    privileged_groups_NonWhCr = [{'Race_White_priv': 1, 'Criminal_Record': 1}]
+    unprivileged_groups_NonWhCr = [{'Race_White_priv': 0, 'Criminal_Record': 1}]
+    alf_dataset_NonWhCr = BinaryLabelDataset(
         df=data,
         label_names=['Loan_Approved'],
-        protected_attribute_names=['Race_Black_priv', 'Criminal_Record'],
+        protected_attribute_names=['Race_White_priv', 'Criminal_Record'],
         favorable_label=1,
         unfavorable_label=0
     )
-    metric_BlCr = BinaryLabelDatasetMetric(alf_dataset_BlCr,
-                                           privileged_groups=privileged_groups_BlCr,
-                                           unprivileged_groups=unprivileged_groups_BlCr)
-    print("Bias against Black with Criminal Record")
-    print("Disparate Impact:", metric_BlCr.disparate_impact())
-    print("Statistical Parity Difference:", metric_BlCr.statistical_parity_difference())
+    metric_NonWhCr = BinaryLabelDatasetMetric(alf_dataset_NonWhCr,
+                                           privileged_groups=privileged_groups_NonWhCr,
+                                           unprivileged_groups=unprivileged_groups_NonWhCr)
+    print("Bias against Non-White with Criminal Record")
+    print("Disparate Impact:", metric_NonWhCr.disparate_impact())
+    print("Statistical Parity Difference:", metric_NonWhCr.statistical_parity_difference())
     print()
 
-    # Plot Loan Approval with Criminal Record between Black and Non-Black people
-    # Filter: only those with a criminal record
+    # Bias against Non-High Credit Score
+    privileged_groups_NonHCredit = [{'CreditScore_HighCredit_priv': 1}]
+    unprivileged_groups_NonHCredit = [{'CreditScore_HighCredit_priv': 0}]
+    alf_dataset_NonHCredit = BinaryLabelDataset(
+        df=data,
+        label_names=['Loan_Approved'],
+        protected_attribute_names=['CreditScore_HighCredit_priv'],
+        favorable_label=1,
+        unfavorable_label=0
+    )
+    metric_NonHCredit = BinaryLabelDatasetMetric(alf_dataset_NonHCredit,
+                                                privileged_groups=privileged_groups_NonHCredit,
+                                                unprivileged_groups=unprivileged_groups_NonHCredit)
+    print("Bias against Non-High Credit Score")
+    print("Disparate Impact:", metric_NonHCredit.disparate_impact())
+    print("Statistical Parity Difference:", metric_NonHCredit.statistical_parity_difference())
+    print()
+
+    # Bias against Non-High Income
+    privileged_groups_HighIncome = [{'Income_HighIncome_priv': 1}]
+    unprivileged_groups_HighIncome = [{'Income_HighIncome_priv': 0}]
+    alf_dataset_HighIncome = BinaryLabelDataset(
+        df=data,
+        label_names=['Loan_Approved'],
+        protected_attribute_names=['Income_HighIncome_priv'],
+        favorable_label=1,
+        unfavorable_label=0
+    )
+    metric_HighIncome = BinaryLabelDatasetMetric(alf_dataset_HighIncome,
+                                                 privileged_groups=privileged_groups_HighIncome,
+                                                 unprivileged_groups=unprivileged_groups_HighIncome)
+    print("Bias against Non-High Income")
+    print("Disparate Impact:", metric_HighIncome.disparate_impact())
+    print("Statistical Parity Difference:", metric_HighIncome.statistical_parity_difference())
+    print()
+
+    # Bias against Non-High Credit with Criminal Record
+    privileged_groups_NonHCredCr = [{'CreditScore_HighCredit_priv': 1,
+                                     'Criminal_Record': 1}]
+    unprivileged_groups_NonHCredCr = [{'CreditScore_HighCredit_priv': 0,
+                                       'Criminal_Record': 1}]
+    alf_dataset_NonHCredCr = BinaryLabelDataset(
+        df=data,
+        label_names=['Loan_Approved'],
+        protected_attribute_names=['CreditScore_HighCredit_priv', 'Criminal_Record'],
+        favorable_label=1,
+        unfavorable_label=0
+    )
+    metric_NonHCredCr = BinaryLabelDatasetMetric(alf_dataset_NonHCredCr,
+                                                 privileged_groups=privileged_groups_NonHCredCr,
+                                                 unprivileged_groups=unprivileged_groups_NonHCredCr)
+    print("Bias against Non-High Credit with Criminal Record")
+    print("Disparate Impact:", metric_NonHCredCr.disparate_impact())
+    print("Statistical Parity Difference:", metric_NonHCredCr.statistical_parity_difference())
+    print()
+
+    # Bias against Non-High Income with Criminal Record
+    privileged_groups_NonHInCr = [{'Income_HighIncome_priv': 1,
+                                   'Criminal_Record': 1}]
+    unprivileged_groups_NonHInCr = [{'Income_HighIncome_priv': 0,
+                                     'Criminal_Record': 1}]
+    alf_dataset_NonHInCr = BinaryLabelDataset(
+        df=data,
+        label_names=['Loan_Approved'],
+        protected_attribute_names=['Income_HighIncome_priv', 'Criminal_Record'],
+        favorable_label=1,
+        unfavorable_label=0
+    )
+    metric_NonHInCr = BinaryLabelDatasetMetric(alf_dataset_NonHInCr,
+                                               privileged_groups=privileged_groups_NonHInCr,
+                                               unprivileged_groups=unprivileged_groups_NonHInCr)
+    print("Bias against Non-High Income with Criminal Record")
+    print("Disparate Impact:", metric_NonHInCr. disparate_impact())
+    print("Statistical Parity Difference:", metric_NonHInCr.statistical_parity_difference())
+    print()
+
     criminal_data = data[data['Criminal_Record'] == 1]
 
-    # Plot using mapping inline
+    # Plot Loan Approval with Criminal Record Between White and Non-White people
     sns.barplot(
         data=criminal_data,
-        x=criminal_data['Race_Black_priv'].map({1: 'Black', 0: 'Non-Black'}),
+        x=criminal_data['Race_White_priv'].map({1: 'White', 0: 'Non-White'}),
         y='Loan_Approved',
         ci=None
     )
-
-    plt.title('Loan Approval Rate: Black vs Non-Black (With Criminal Record)')
+    plt.title('Loan Approval Rate: White vs Non-White (With Criminal Record)')
     plt.xlabel('Race')
     plt.ylabel('Approval Rate')
     plt.ylim(0, 1)
