@@ -3,8 +3,9 @@ import pandas as pd
 #import machine learning libraries
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.compose import ColumnTransformerfrom sklearn.pipeline import Pipeline
 
 
 # import other python module
@@ -24,10 +25,11 @@ def main():
     bias_detection(data)
     
     
-    preprocessor = LogisticRegression(max_iter=1000, random_state=42)
+    preprocessor = ColumnTransformer(transformers=[('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols)],remainder='passthrough')
     
     pipeline = Pipeline(steps=[
-        ('preprocessor', preprocessor)
+        ('preprocessor', preprocessor),
+        ('classifier', RandomForestClassifier(class_weight='balanced', random_state=42))   
     ])
     
     X_train, X_test, y_train, y_test = train_test_split(
