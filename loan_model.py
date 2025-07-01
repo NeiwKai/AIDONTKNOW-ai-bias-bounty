@@ -148,3 +148,21 @@ print("Bias against Black with Criminal Record")
 print("Disparate Impact:", metric_BlCr.disparate_impact())
 print("Statistical Parity Difference:", metric_BlCr.statistical_parity_difference())
 print()
+
+# Plot Loan Approval with Criminal Record between Black and Non-Black people
+# Filter: only those with a criminal record
+criminal_data = data[data['Criminal_Record'] == 1]
+
+# Plot using mapping inline
+sns.barplot(
+    data=criminal_data,
+    x=criminal_data['Race_Black_priv'].map({1: 'Black', 0: 'Non-Black'}),
+    y='Loan_Approved',
+    ci=None
+)
+
+plt.title('Loan Approval Rate: Black vs Non-Black (With Criminal Record)')
+plt.xlabel('Race')
+plt.ylabel('Approval Rate')
+plt.ylim(0, 1)
+plt.show()
