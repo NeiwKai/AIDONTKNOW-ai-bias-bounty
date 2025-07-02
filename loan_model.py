@@ -22,7 +22,6 @@ def main():
     data = dataset_loader(data)
 
     #bias_detection(data) # use to detect the bias in dataset
-
     ignore_cols = ['Gender', 'Race', 'Income',
                    'Loan_Amount', 'Age', 'Language_Proficiency',
                    'Zip_Code_Group', 'Citizenship_Status', 'Credit_Score']#, 'Zip_Code_Group']
