@@ -1,7 +1,15 @@
 # AI Bias Bounty Hackathon `AIDONTKNOW`
 
 
-# 🔍 What we found
+#### How to run the project
+<code>
+  catboost
+  fairlearn
+  aif360
+</code>
+
+
+# 🔍 What we have found
 ## Bias detection with AIF360
 
 > *__Disclaimer__*
