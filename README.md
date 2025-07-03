@@ -1,4 +1,4 @@
-# AI Bias Bounty Hackathon --AIDONTKNOW--
+# AI Bias Bounty Hackathon __AIDONTKNOW__
 
 
 # 🔍 What we found
@@ -8,15 +8,14 @@
 > | DI |  |
 > |--|--|
 > | 1 | No bias |
-> | <1 | Has Bias against topic|
-> | >1 | Has Bias against the opposite of topic|  
+> | <1 | Has Bias against topic |
+> | >1 | Has Bias against the opposite of topic |  
 > 
 > | SPD | |
 > |--|--|
-> | 0 | No bias
+> | 0 | No bias |
 > | <0 | Has Bias against topic |
-> | >1 | Has Bias against the opposite of topic
-
+> | >1 | Has Bias against the opposite of topic |
 
 
 
