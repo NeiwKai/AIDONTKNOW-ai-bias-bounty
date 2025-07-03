@@ -2,9 +2,17 @@
 
 
 #### How to run the project
+
+*1. Install the require library*
 `
+pandas
+matplotlib
+numpy
+seaborn
 catboost
 scikit-learn
+fairlearn
+aif360
 `
 
 
