@@ -3,9 +3,23 @@
 
 # 🔍 What we found
 ## With AIF360
-________________
-|   asd        |
-----------------
+
+> *__Disclaimer__*
+> | DI |  |
+> |--|--|
+> | 1 | No bias |
+> | <1 | Has Bias against topic|
+> | >1 | Has Bias against the opposite of topic|  
+> 
+> | SPD | |
+> |--|--|
+> | 0 | No bias
+> | <0 | Has Bias against topic |
+> | >1 | Has Bias against the opposite of topic
+
+
+
+
 #### Bias against Black
 <img alt="image of bias" src="visualization/Bias1.png" style="width: 500px;">
 Disparate Impact: 0.8203400899931298 <br>
