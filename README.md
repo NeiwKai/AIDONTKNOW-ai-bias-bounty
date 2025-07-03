@@ -3,7 +3,7 @@
 
 #### How to run the project
 
-*1. Install the require library*
+* 1. Install the require library. * <br>
 `
 pandas
 matplotlib
@@ -14,6 +14,8 @@ scikit-learn
 fairlearn
 aif360
 `
+* 2. Clone the repository. * <br>
+* 3. Type `python3 loan_model.py` in your terminal. *
 
 
 # 🔍 What we have found
