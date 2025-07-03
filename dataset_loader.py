@@ -16,20 +16,15 @@ def credit_score_level(score):
 def dataset_loader(data):
     if 'Loan_Approved' in data.columns:
             data['Loan_Approved'] = data['Loan_Approved'].replace({'Approved': 1, 'Denied': 0}).astype(int)
+
     # Replace string values with integer
     binary_cols = ['Disability_Status', 'Criminal_Record']
     data[binary_cols] = data[binary_cols].replace({'No': 0, 'Yes': 1})
     
     #for bias_detection
     data['Gender'] = data['Gender'].replace({'Male': 1, 'Female': 0, 'Non-binary': 2}).astype(int)
-    data['Race'] = data['Race'].replace({'White': 0, 'Black': 1, 'Hispanic': 2, 'Multiracial': 3, 'Native American': 4, 'Asian': 5}).astype(int)
+    data['Race'] = data['Race'].replace({'White': 0, 'Black': 1, 'Native American': 2, 'Multiracial': 3, 'Hispanic': 4, 'Asian': 5}).astype(int)
     # -----------------
-
-    '''
-    data = pd.get_dummies(data, columns=['Gender', 'Race',
-                                         'Employment_Type', 'Education_Level', 'Zip_Code_Group',
-                                         'Citizenship_Status', 'Age_Group', 'Language_Proficiency'], drop_first=True)
-    '''
 
     data['Employment_Type'] = data['Employment_Type'].replace({'Unemployed': 0, 'Part-time': 1, 'Gig': 2, 'Self-employed': 3, 'Full-time': 4}).astype(int)
     data['Education_Level'] = data['Education_Level'].replace({'High School': 0, 'Some College': 1, "Bachelor's": 2, 'Graduate': 3}).astype(int)

@@ -14,37 +14,39 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from fairlearn.metrics import MetricFrame, selection_rate, true_positive_rate, false_positive_rate
 from scipy.stats import uniform, randint
 
+from fairlearn.postprocessing import ThresholdOptimizer
+
 # Create new Race label
 def clean_race(race):
-    return race if race in [0, 1, 2] else 99  # Keep top 3 groups, others → 99
+    return race if race in [0, 1, 2] else 99  # Keep top 3 groups, others → 99, for better fairness detection and Post processinc
 
 def main():
     pd.set_option('future.no_silent_downcasting', True)
     data = pd.read_csv("datasets/loan_access_dataset.csv")
 
+    # Ignore column ID
     if 'ID' in data.columns:
         data = data.drop(columns=['ID'])
 
-    data = dataset_loader(data)
 
+    data = dataset_loader(data)
     data['Race'] = data['Race'].apply(clean_race)
 
 
     print(data.groupby(['Gender', 'Race']).size())
 
-
-    #bias_detection(data) # use to detect the bias in dataset
-    # Drop unwanted column before training process
-    '''
-    ignore_cols = ['Gender', 'Race', 'Income', 'Loan_Amount', 'Age']#, 'Zip_Code_Group']
-    data = data.drop(columns=ignore_cols)
-    '''
+    # Bias Detection
+    bias_detection(data) # use to detect the bias in dataset with aif360
+    # Drop column that use to check bias
+    drop_list = ['Gender_Non-binary_priv', 'Race_White_priv', 'Race_Black_priv', 'Race_Native-American_priv', 'EmploymentType_Unemployed_priv', 'CreditScore_HighCredit_priv', 'Income_HighIncome_priv']
+    data = data.drop(columns=drop_list, errors='ignore')
+    # --------------
 
     print(data.columns)
     print(data.head())
+    
 
-    #print(data.corr()['Loan_Approved'].sort_values())
-
+    # split the train and val dataset
     X = data.drop(['Loan_Approved'], axis=1)
     Y = data['Loan_Approved']
     X.shape, Y.shape
@@ -53,7 +55,7 @@ def main():
 
 
 
-    # Define the base model
+    # Define the CatBoost model
     cat = CatBoostClassifier(
         iterations=20,      
         learning_rate=0.1,   
@@ -72,8 +74,9 @@ def main():
 
     sensitive_features = X_val[['Gender', 'Race']]
 
-    print("Calculating Unfairness in Gender and Race...")
 
+
+    print("Calculating Unfairness in Gender and Race...")
     mf = MetricFrame(
         metrics={
             'accuracy': accuracy_score,
@@ -99,7 +102,7 @@ def main():
     df = mf.by_group.reset_index()  # convert MetricFrame to DataFrame
 
     plt.figure(figsize=(12, 6))
-    sns.barplot(x="Race", y="selection_rate", hue="Gender", data=df)
+    sns.barplot(x=df["Race"].map({0: 'White', 1: 'Black', 2:'Native American', 99: 'Other'}), y="selection_rate", hue=df["Gender"].map({0: 'Male', 1: 'Female', 2: 'Non-binary'}), data=df)
     plt.title("Selection Rate by Gender and Race")
     plt.ylabel("Selection Rate")
     plt.xticks(rotation=45)
@@ -108,14 +111,12 @@ def main():
     plt.show()
 
 
-    from fairlearn.postprocessing import ThresholdOptimizer
-
+    # Posprocessing the unfairness
     postprocessor = ThresholdOptimizer(
         estimator=cat,
         constraints="equalized_odds",  # or "demographic_parity"
         prefit=True
     )
-
     # Fit using validation set
     postprocessor.fit(X_val, Y_val, sensitive_features=X_val[['Gender']])
 
@@ -137,9 +138,24 @@ def main():
     print("\n✅ AFTER Mitigation:")
     print("Overall metrics:\n", mf_after.overall)
     print("\nGroup-wise:\n", mf_after.by_group)
+    print("\n⚠️ Fairness Gaps:")
+    print("Selection rate diff:", mf_after.difference()['selection_rate'])
+    print("Equalized odds diff (max of TPR/FPR):", max(mf_after.difference()['TPR'], mf_after.difference()['FPR']))
+
+    df = mf_after.by_group.reset_index()  # convert MetricFrame to DataFrame
+
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x=df["Race"].map({0: 'White', 1: 'Black', 2:'Native American', 99: 'Other'}), y="selection_rate", hue=df["Gender"].map({0: 'Male', 1: 'Female', 2: 'Non-binary'}), data=df)
+    plt.title("Selection Rate by Gender and Race (After Mitigation)")
+    plt.ylabel("Selection Rate")
+    plt.xticks(rotation=45)
+    plt.ylim(0, 1)
+    plt.tight_layout()
+    plt.show()
 
 
-    print("Begin the submission.csv")
+
+    print("Begin testing... output->submission.csv")
     test_data = pd.read_csv("datasets/test.csv")
     test_data = dataset_loader(test_data)
 
