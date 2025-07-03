@@ -66,9 +66,9 @@ Disparate Impact: 0.4472864404000656 <br>
 Statistical Parity Difference: -0.18477814015950886
 
 ---
-After that we decide to use fairlearn model to evaluate fairness the sensitive cases ('Gender' and 'Race')
+After that we decide to use fairlearn model to evaluate fairness the sensitive cases ('Gender' and 'Race') <br>
 *Before Mitigation*
 <img alt="graph of gender and race" src="visualization/beforeMitigation.png" />
-*After Mitigation with ThresholdOptimizer from fairlearn*
+*After Mitigation with ThresholdOptimizer from fairlearn* 
 <img alt="graph of gender and race" src="visualization/afterMitigation.png" />
 
