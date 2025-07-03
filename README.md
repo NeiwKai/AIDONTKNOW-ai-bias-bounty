@@ -2,11 +2,10 @@
 
 
 #### How to run the project
-<code>
-  catboost
-  fairlearn
-  aif360
-</code>
+`
+catboost
+scikit-learn
+`
 
 
 # 🔍 What we have found
