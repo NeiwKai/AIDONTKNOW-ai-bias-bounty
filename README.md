@@ -3,6 +3,9 @@
 
 # 🔍 What we found
 ## With AIF360
+________________
+|   asd        |
+----------------
 #### Bias against Black
 <img alt="image of bias" src="visualization/Bias1.png" style="width: 500px;">
 Disparate Impact: 0.8203400899931298 <br>
