@@ -1,4 +1,4 @@
-# AI Bias Bounty Hackathon __AIDONTKNOW__
+# AI Bias Bounty Hackathon 'AIDONTKNOW'
 
 
 # 🔍 What we found
