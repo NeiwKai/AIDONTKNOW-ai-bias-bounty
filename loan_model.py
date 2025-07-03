@@ -28,6 +28,9 @@ def main():
     if 'ID' in data.columns:
         data = data.drop(columns=['ID'])
 
+    obj = (data.dtypes == 'object')
+    print("Categorical variables:",len(list(obj[obj].index)))
+
 
     data = dataset_loader(data)
     data['Race'] = data['Race'].apply(clean_race)
@@ -57,25 +60,24 @@ def main():
 
     # Define the CatBoost model
     cat = CatBoostClassifier(
-        iterations=20,      
-        learning_rate=0.1,   
+        iterations=87,      
+        learning_rate=0.2,   
         depth=6,              
         #verbose=0, 
-        loss_function='Logloss', 
+        loss_function='Focal:focal_alpha=0.5;focal_gamma=1.5',
         random_seed=42 
     )
     cat_features = ['Gender', 'Race', 'Age_Group', 'Employment_Type', 'Education_Level', 'Citizenship_Status',
                     'Language_Proficiency', 'Disability_Status', 'Criminal_Record', 'Zip_Code_Group']
-
     cat.fit(X_train, Y_train)
     Y_pred = cat.predict(X_val)
     print("Classification Report:\n", classification_report(Y_val, Y_pred))
 
 
+
+
+
     sensitive_features = X_val[['Gender', 'Race']]
-
-
-
     print("Calculating Unfairness in Gender and Race...")
     mf = MetricFrame(
         metrics={
@@ -152,7 +154,6 @@ def main():
     plt.ylim(0, 1)
     plt.tight_layout()
     plt.show()
-
 
 
     print("Begin testing... output->submission.csv")
