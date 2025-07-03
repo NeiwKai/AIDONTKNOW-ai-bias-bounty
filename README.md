@@ -15,10 +15,22 @@ fairlearn
 aif360
 `
 2. Clone the repository. <br>
-3. Type `python3 loan_model.py` in your terminal. 
+3. Type `python3 loan_model.py` in your terminal.
+
+#### Demo Video
+https://youtu.be/GazB0h52xEw
 
 
 # 🔍 What we have found
+## Class Imbalance
+
+- Criminal record(#1): (no: 9211, yes: 789)
+- disability_status(#2):  (no: 8804, yes: 1196)
+- Language_Proficiency(#3): (High school: 3014, Some College:1998, Graduate:1540)
+- Citizenship_status(#4): (Citizen: 8552, Permanent Resident:991, Visa Holder: 457)
+- Employment_Type(#5): (Full time: 6535, Part-time: 1476, Gig:809, Unemployed: 207)
+
+
 ## Bias detection with AIF360
 
 > *__Disclaimer__*
